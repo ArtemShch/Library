@@ -12,12 +12,14 @@ public class AuthorList {
     private ArrayList<Author> authors = new ArrayList<Author>();
 
     public ArrayList<Author> getAuthors() {
-
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
-            Connection connection = Database.getConnection();
+            connection = Database.getConnection();
 
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM library.author ORDER BY fio");
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("SELECT * FROM library.author ORDER BY fio");
 
             while (resultSet.next())
             {
@@ -29,6 +31,15 @@ public class AuthorList {
 
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                if (statement != null) statement.close();
+                if (resultSet != null) resultSet.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return authors;
