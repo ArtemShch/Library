@@ -88,4 +88,12 @@ public class Book {
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
+
+    public Object getPublisher() {
+        return publisher;
+    }
+
+    public boolean getAuthor() {
+        return author;
+    }
 }
