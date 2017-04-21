@@ -1,21 +1,20 @@
 package beans;
 
+import java.awt.*;
 import java.util.Date;
 
-/**
- * Created by artem on 17.04.17.
- */
 public class Book {
     public Book() {
     }
 
-    public Book(String name, int pageCount, int genreId, int authorId, Date publishYear, int publisherId, String isbn) {
+    public Book(String name, int pageCount, int genreId, String author, Date publishYear, byte[] image, String publisher, String isbn) {
         this.name = name;
         this.pageCount = pageCount;
         this.genreId = genreId;
-        this.authorId = authorId;
+        this.author = author;
         this.publishYear = publishYear;
-        this.publisherId = publisherId;
+        this.image = image;
+        this.publisher = publisher;
         this.isbn = isbn;
     }
 
@@ -25,11 +24,29 @@ public class Book {
 
     private int genreId;
 
-    private int authorId;
+    private String author;
 
     private Date publishYear;
 
-    private int publisherId;
+    private byte[] image;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    private String publisher;
 
     private String isbn;
 
@@ -57,28 +74,12 @@ public class Book {
         this.genreId = genreId;
     }
 
-    public int getAuthorId() {
-        return authorId;
-    }
-
-    public void setAuthorId(int authorId) {
-        this.authorId = authorId;
-    }
-
     public Date getPublishYear() {
         return publishYear;
     }
 
     public void setPublishYear(Date publishYear) {
         this.publishYear = publishYear;
-    }
-
-    public int getPublisherId() {
-        return publisherId;
-    }
-
-    public void setPublisherId(int publisherId) {
-        this.publisherId = publisherId;
     }
 
     public String getIsbn() {
@@ -89,11 +90,11 @@ public class Book {
         this.isbn = isbn;
     }
 
-    public Object getPublisher() {
+    public String getPublisher() {
         return publisher;
     }
 
-    public boolean getAuthor() {
+    public String getAuthor() {
         return author;
     }
 }

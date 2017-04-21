@@ -7,7 +7,7 @@
     <ul class="nav">
         <jsp:useBean id="genreList" class="beans.GenreList" scope="application"/>
         <c:forEach var="genre" items="${genreList.genres}">
-            <li><a href="books.jsp?genre_id=${genre.id}&name=${genre.name}">${genre.name}"</a></li>
+            <li><a href="books.jsp?genre_id=${genre.id}&name=${genre.name}">${genre.name}</a></li>
         </c:forEach>
     </ul>
 </div>

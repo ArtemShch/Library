@@ -44,7 +44,11 @@
             <p style="margin: 10px"> <a href="#">Читать</a> </p>
         </td>
         <td style="width: 150px; height: 100px">
-            картинка
+            <%
+
+                String b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(book.getImage());
+            %>
+            <img src="data:image/jpg;base64, <%=b64%>" alt="Visruth.jpg not found" />
         </td>
     </tr>
     <%}%>
