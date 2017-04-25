@@ -3,7 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <link href="<c:url value="css/login.css" />" rel="stylesheet">
+  <link href="<c:url value="css/style_index.css" />" rel="stylesheet">
   <title>Login</title>
 </head>
 <body>

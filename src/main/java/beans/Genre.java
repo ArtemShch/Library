@@ -4,14 +4,16 @@ package beans;
  * Created by artem on 17.04.17.
  */
 public class Genre {
+    private String name;
+    private long id;
+
     public Genre() {
     }
 
-    public Genre(String name) {
+    public Genre(String name, long id) {
         this.name = name;
+        this.id = id;
     }
-
-    private  long id;
 
     public long getId() {
         return id;
@@ -21,7 +23,7 @@ public class Genre {
         this.id = id;
     }
 
-    private String name;
+
 
     public String getName() {
         return name;

@@ -1,81 +1,109 @@
 package beans;
 
 import db.Database;
+import enums.SearchType;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 
 
 public class BookList {
-    private ArrayList<Book> booksByGenre = null;
+    private ArrayList<Book> bookList = new ArrayList<Book>();
 
-    public ArrayList<Book> getBooksByGenre(long genreId) {
+    private ArrayList<Book> getBooks(String sql) {
 
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet resultSet = null;
-        booksByGenre = new ArrayList();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+
         try {
-            connection = Database.getConnection();
+            conn = Database.getConnection();
+            stmt = conn.createStatement();
 
-            statement = connection.createStatement();
-            resultSet =
-                    statement.executeQuery("SELECT" +
-                            "    book.name as bookName," +
-                            "    book.content," +
-                            "    book.page_count," +
-                            "    book.isbn," +
-                            "    genre.name AS genreName," +
-                            "    author.fio," +
-                            "    book.publish_year," +
-                            "    publisher.name AS publisherName," +
-                            "    book.image" +
-                            " FROM library.book" +
-                            " JOIN library.genre" +
-                            " ON genre.id = " + genreId  +
-                            " JOIN library.author " +
-                            "ON author.id = book.author_id" +
-                            " JOIN library.publisher" +
-                            " ON publisher.id = book.publisher_id" +
-                            " WHERE book.genre_id = " + genreId +";");
-
-            while (resultSet.next())
-            {
+            rs = stmt.executeQuery(sql);
+            while (rs.next()) {
                 Book book = new Book();
-
-                book.setName(resultSet.getString("bookName"));
-                book.setIsbn(resultSet.getString("isbn"));
-                book.setPublisher(resultSet.getString("publisherName" ));
-                book.setPageCount(resultSet.getInt("page_count"));
-                book.setAuthor(resultSet.getString("fio"));
-                book.setPublishYear(resultSet.getDate("publish_year"));
-
-                //get image
-                Blob blob = resultSet.getBlob("image");
-                byte[] imageInByteArray = blob.getBytes(1, (int) blob.length());
-                book.setImage(imageInByteArray);
-
-                booksByGenre.add(book);
+                book.setId(rs.getLong("id"));
+                book.setName(rs.getString("name"));
+                book.setGenre(rs.getString("genre"));
+                book.setIsbn(rs.getString("isbn"));
+                book.setAuthor(rs.getString("author"));
+                book.setPageCount(rs.getInt("page_count"));
+                book.setPublishDate(rs.getInt("publish_year"));
+                book.setPublisher(rs.getString("publisher"));
+                book.setImage(rs.getBytes("image"));
+                bookList.add(book);
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
         } finally {
             try {
-                if (statement != null) statement.close();
-                if (resultSet != null) resultSet.close();
-                if (connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
 
-        return booksByGenre;
+        return bookList;
+    }
+
+    public ArrayList<Book> getAllBooks() {
+        return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, "
+                + "a.fio as author, g.name as genre, b.image from book b inner join author a on b.author_id=a.id "
+                + "inner join genre g on b.genre_id=g.id inner join publisher p on b.publisher_id=p.id order by b.name");
+    }
+
+
+    public ArrayList<Book> getBooksByGenre(long id) {
+        if (id == 0) {
+            return getAllBooks();
+        } else {
+            return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+                    + "inner join author a on b.author_id=a.id "
+                    + "inner join genre g on b.genre_id=g.id "
+                    + "inner join publisher p on b.publisher_id=p.id "
+                    + "where genre_id=" + id + " order by b.name "
+                    + "limit 0,5");
+        }
+    }
+
+    public ArrayList<Book> getBooksByLetter(String letter) {;
+        return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+                + "inner join author a on b.author_id=a.id "
+                + "inner join genre g on b.genre_id=g.id "
+                + "inner join publisher p on b.publisher_id=p.id "
+                + "where substr(b.name,1,1)='" + letter + "' order by b.name "
+                + "limit 0,5");
 
     }
+
+    public ArrayList<Book> getBooksBySearch(String searchStr, SearchType type) {
+        StringBuilder sql = new StringBuilder("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+                + "inner join author a on b.author_id=a.id "
+                + "inner join genre g on b.genre_id=g.id "
+                + "inner join publisher p on b.publisher_id=p.id ");
+
+        if (type == SearchType.AUTHOR) {
+            sql.append("where lower(a.fio) like '%" + searchStr.toLowerCase() + "%' order by b.name ");
+
+        } else if (type == SearchType.TITLE) {
+            sql.append("where lower(b.name) like '%" + searchStr.toLowerCase() + "%' order by b.name ");
+        }
+        sql.append("limit 0,5");
+
+
+        return getBooks(sql.toString());
+
+
+    }
+
 }

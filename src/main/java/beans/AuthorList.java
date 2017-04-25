@@ -24,7 +24,7 @@ public class AuthorList {
             while (resultSet.next())
             {
                 Author author = new Author();
-
+                author.setId(resultSet.getLong("id"));
                 author.setName(resultSet.getString("fio"));
                 authors.add(author);
             }
