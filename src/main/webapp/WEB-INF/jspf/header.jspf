@@ -10,6 +10,13 @@
 <body>
 
     <%
+           if (request.getSession().getAttribute("username") == null)
+                    request.getSession().setAttribute("username", request.getParameter("username"));
+
+           if (request.getSession().getAttribute("username") == null)
+               {
+                    response.sendRedirect("../index.jsp");
+               }
             request.setCharacterEncoding("UTF-8");
     %>
 
@@ -25,8 +32,9 @@
 
         </div>
         <div class="welcome">
-            <h5>Добро пожаловать, <%=request.getParameter("username") %> !</h5>
-            <h6><a href="../../index.jsp">Выход</a><h6>
+            <h5>Добро пожаловать, <%=request.getSession().getAttribute("username") %> !</h5>
+            <%--logout--%>
+            <h6><a href="../../pages/logout.jsp">Logout</a><h6>
         </div>
         <div class="search_form">
             <form name="search_form" method="GET" action="../../pages/books.jsp">
