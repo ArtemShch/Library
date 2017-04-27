@@ -32,6 +32,7 @@ public class BookList {
                 book.setPublishDate(rs.getInt("publish_year"));
                 book.setPublisher(rs.getString("publisher"));
                 book.setImage(rs.getBytes("image"));
+                book.setMime(rs.getString("mime"));
                 bookList.add(book);
             }
 
@@ -57,7 +58,7 @@ public class BookList {
     }
 
     public ArrayList<Book> getAllBooks() {
-        return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, "
+        return getBooks("select b.id,b.name, b.mime, b.isbn,b.page_count,b.publish_year, p.name as publisher, "
                 + "a.fio as author, g.name as genre, b.image from book b inner join author a on b.author_id=a.id "
                 + "inner join genre g on b.genre_id=g.id inner join publisher p on b.publisher_id=p.id order by b.name");
     }
@@ -67,7 +68,7 @@ public class BookList {
         if (id == 0) {
             return getAllBooks();
         } else {
-            return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+            return getBooks("select b.id,b.name, b.isbn,b.page_count, b.mime, b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
                     + "inner join author a on b.author_id=a.id "
                     + "inner join genre g on b.genre_id=g.id "
                     + "inner join publisher p on b.publisher_id=p.id "
@@ -77,7 +78,7 @@ public class BookList {
     }
 
     public ArrayList<Book> getBooksByLetter(String letter) {;
-        return getBooks("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+        return getBooks("select b.id,b.name, b.mime, b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
                 + "inner join author a on b.author_id=a.id "
                 + "inner join genre g on b.genre_id=g.id "
                 + "inner join publisher p on b.publisher_id=p.id "
@@ -87,7 +88,7 @@ public class BookList {
     }
 
     public ArrayList<Book> getBooksBySearch(String searchStr, SearchType type) {
-        StringBuilder sql = new StringBuilder("select b.id,b.name,b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
+        StringBuilder sql = new StringBuilder("select b.id,b.name, b.mime, b.isbn,b.page_count,b.publish_year, p.name as publisher, a.fio as author, g.name as genre, b.image from book b "
                 + "inner join author a on b.author_id=a.id "
                 + "inner join genre g on b.genre_id=g.id "
                 + "inner join publisher p on b.publisher_id=p.id ");
@@ -102,8 +103,6 @@ public class BookList {
 
 
         return getBooks(sql.toString());
-
-
     }
 
 }

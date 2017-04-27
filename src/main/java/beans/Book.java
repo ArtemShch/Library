@@ -1,6 +1,12 @@
 package beans;
 
+import db.Database;
+
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 public class Book {
@@ -14,7 +20,6 @@ public class Book {
     private int publishDate;
     private String publisher;
     private byte[] image;
-
 
     public Book() {
     }
@@ -97,5 +102,39 @@ public class Book {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public void fillPdfContent() {
+        Statement stmt = null;
+        ResultSet rs = null;
+        Connection conn = null;
+
+        try {
+            conn = Database.getConnection();
+            stmt = conn.createStatement();
+
+            rs = stmt.executeQuery("SELECT book.content FROM library.book " +
+                    "WHERE book.id = " + this.id);
+            while (rs.next()) {
+                this.setContent(rs.getBytes("content"));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
     }
 }

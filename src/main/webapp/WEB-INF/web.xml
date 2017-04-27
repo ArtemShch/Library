@@ -32,4 +32,17 @@
     </resource-ref>
 
 
+    <!--sservlet-->
+
+    <servlet>
+        <servlet-name>PdfContent</servlet-name>
+        <servlet-class>PdfContent</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>PdfContent</servlet-name>
+        <url-pattern>/PdfContent</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>

@@ -48,7 +48,6 @@
         </div>
         <div class="book_image">
             <%
-
                 String b64 = javax.xml.bind.DatatypeConverter.printBase64Binary(book.getImage());
             %>
             <img src="data:image/jpg;base64, <%=b64%>" height="250" width="190" alt="Обложка"/>
@@ -60,7 +59,10 @@
             <br><strong>Количество страниц:</strong> <%=book.getPageCount()%>
             <br><strong>Год издания:</strong> <%=book.getPublishDate()%>
             <br><strong>Автор:</strong> <%=book.getAuthor()%>
-            <p style="margin:10px;"> <a href="#">Читать</a></p>
+            <p style="margin:10px;">
+                <a href="<%=request.getContextPath()%>/PdfContent?index=<%=list.indexOf(book)%>">Читать</a>
+            </p>
+
         </div>
     </div>
 
